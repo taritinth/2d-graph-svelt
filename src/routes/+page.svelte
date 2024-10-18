@@ -51,28 +51,6 @@
 	function getUsers() {
 		const usersRef = ref(db, 'users');
 
-		// const snapshot = await get(usersRef);
-		// users = snapshot.val() || {};
-
-		// console.log('users', users);
-
-		// gData = {
-		// 	// @ts-ignore
-		// 	nodes: Object.entries(users).map(([key, user]) => ({
-		// 		id: key,
-		// 		x: Math.random() * boundary * 2 - boundary,
-		// 		y: Math.random() * boundary * 2 - boundary,
-		// 		z: Math.random() * zBoundary * 2 - zBoundary,
-		// 		size: minNodeSize
-		// 	})),
-		// 	links: []
-		// };
-
-		// Object.keys(users).forEach((username) => {
-		// 	// @ts-ignore
-		// 	if (username) nodeConnectionCounts[username] = 0;
-		// });
-
 		// @ts-ignore
 		onValue(usersRef, (snapshot) => {
 			users = snapshot.val();
@@ -98,22 +76,6 @@
 			} else {
 				updateGraph();
 			}
-			// gData = {
-			// 	// @ts-ignore
-			// 	nodes: Object.entries(users).map(([key, user]) => ({
-			// 		id: key,
-			// 		x: Math.random() * boundary * 2 - boundary,
-			// 		y: Math.random() * boundary * 2 - boundary,
-			// 		z: Math.random() * zBoundary * 2 - zBoundary,
-			// 		size: minNodeSize
-			// 	})),
-			// 	links: []
-			// };
-
-			// Object.keys(users).forEach((username) => {
-			// 	// @ts-ignore
-			// 	if (username) nodeConnectionCounts[username] = 0;
-			// });
 		});
 	}
 
@@ -141,7 +103,7 @@
 			.nodeLabel('id')
 			.backgroundColor('#000011')
 			.linkWidth(0.5)
-			.linkColor(() => 'rgba(255, 255, 255, 0.275)')
+			.linkColor(() => 'rgba(255, 255, 255, 0.3)')
 			// @ts-ignore
 			.nodeCanvasObject((node, ctx) => {
 				// @ts-ignore
