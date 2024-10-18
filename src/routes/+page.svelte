@@ -53,19 +53,24 @@
 
 		// @ts-ignore
 		onValue(usersRef, (snapshot) => {
-			users = snapshot.val();
+			users = snapshot.val() || {};
 			if (!isLoaded) {
 				isLoaded = true;
 				gData = {
 					// @ts-ignore
 					// @ts-ignore
-					nodes: Object.entries(users).map(([key, user]) => ({
-						id: key,
-						x: Math.random() * boundary * 2 - boundary,
-						y: Math.random() * boundary * 2 - boundary,
-						z: Math.random() * zBoundary * 2 - zBoundary,
-						size: minNodeSize
-					})),
+					nodes: Object.entries(users).map(([key, user]) => {
+						const userAvatar = new Image();
+						userAvatar.src = user.avatarUrl;
+						return {
+							id: key,
+							x: Math.random() * boundary * 2 - boundary,
+							y: Math.random() * boundary * 2 - boundary,
+							z: Math.random() * zBoundary * 2 - zBoundary,
+							size: minNodeSize,
+							img: userAvatar
+						};
+					}),
 					links: []
 				};
 
@@ -107,14 +112,20 @@
 			// @ts-ignore
 			.nodeCanvasObject((node, ctx) => {
 				// @ts-ignore
-				const user = users[node.id];
-				const img = new Image();
-				img.src = user.avatarUrl;
+				// const user = users[node.id];
+				// const img = new Image();
+				// img.src = user.avatarUrl;
 				ctx.save();
 				ctx.beginPath();
 				ctx.arc(node.x, node.y, node.size / 2, 0, 2 * Math.PI, false);
 				ctx.clip();
-				ctx.drawImage(img, node.x - node.size / 2, node.y - node.size / 2, node.size, node.size);
+				ctx.drawImage(
+					node.img,
+					node.x - node.size / 2,
+					node.y - node.size / 2,
+					node.size,
+					node.size
+				);
 				ctx.restore();
 			})
 			.enableNodeDrag(false)
@@ -182,6 +193,8 @@
 		updateNodeSizes();
 		// @ts-ignore
 		graphInstance.graphData(gData);
+
+		console.log('Graph updated', gData);
 	}
 </script>
 
