@@ -193,8 +193,6 @@
 		updateNodeSizes();
 		// @ts-ignore
 		graphInstance.graphData(gData);
-
-		console.log('Graph updated', gData);
 	}
 </script>
 
