@@ -108,7 +108,7 @@
 			.nodeLabel('id')
 			.backgroundColor('#000011')
 			.linkWidth(0.5)
-			.linkColor(() => 'rgba(255, 255, 255, 0.3)')
+			.linkColor(() => 'rgba(255, 255, 255, 0.4)')
 			// @ts-ignore
 			.nodeCanvasObject((node, ctx) => {
 				// @ts-ignore
