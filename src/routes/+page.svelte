@@ -8,7 +8,7 @@
 	import { getDatabase, ref, onValue, get } from 'firebase/database';
 
 	// @ts-ignore
-	const encodeUsername = (text) => text.replace('.', '-');
+	const encodeUsername = (text) => text.replaceAll('.', '-');
 
 	const firebaseConfig = {
 		apiKey: 'AIzaSyCjXVFc6h-s1UJ5DyUxlmnF3moIG9K6aAc',
