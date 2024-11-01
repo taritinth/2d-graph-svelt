@@ -1,11 +1,15 @@
 <script>
 	import { onMount } from 'svelte';
 	// @ts-ignore
+	// @ts-ignore
+	// @ts-ignore
+	// @ts-ignore
+	// @ts-ignore
 	import * as d3 from 'd3';
 	// @ts-ignore
 	import { initializeApp } from 'firebase/app';
 	// @ts-ignore
-	import { getDatabase, ref, onValue, get } from 'firebase/database';
+	import { getDatabase, ref, set, onValue, get } from 'firebase/database';
 
 	// @ts-ignore
 	const encodeUsername = (text) => text.replaceAll('.', '-');
@@ -38,10 +42,16 @@
 
 	let isLoaded = false;
 
+	let savedPositions = {}; // Initialize savedPositions
+	// @ts-ignore
+	let inactivityTimer;
+	const inactivityDelay = 3000; // 3 seconds
+
 	onMount(async () => {
 		// Dynamically import force-graph in onMount
 		const { default: ForceGraph } = await import('force-graph');
 
+		await loadNodePositions();
 		getUsers();
 		listenForNewConnections();
 
@@ -64,15 +74,30 @@
 						userAvatar.src = user.avatarUrl;
 						return {
 							id: key,
-							x: Math.random() * boundary * 2 - boundary,
-							y: Math.random() * boundary * 2 - boundary,
-							z: Math.random() * zBoundary * 2 - zBoundary,
+							// @ts-ignore
+							x: savedPositions[key]?.x || Math.random() * boundary * 2 - boundary, // Use saved or random position
+							// @ts-ignore
+							y: savedPositions[key]?.y || Math.random() * boundary * 2 - boundary,
+							// @ts-ignore
+							z: savedPositions[key]?.z || Math.random() * zBoundary * 2 - zBoundary,
 							size: minNodeSize,
 							img: userAvatar
 						};
 					}),
 					links: []
 				};
+
+				// Get clientId from URL query parameters
+				const urlParams = new URLSearchParams(window.location.search);
+				const clientId = urlParams.get('clientId');
+
+				// Check if clientId is the specific client
+				if (clientId === 'mainScreen') {
+					// Start inactivity timer for this client
+					resetInactivityTimer();
+					// @ts-ignore
+					graphInstance.onEngineStop(resetInactivityTimer);
+				}
 
 				Object.keys(users).forEach((username) => {
 					// @ts-ignore
@@ -193,6 +218,33 @@
 		updateNodeSizes();
 		// @ts-ignore
 		graphInstance.graphData(gData);
+	}
+
+	function saveNodePositions() {
+		const positionsRef = ref(db, 'nodePositions');
+		const positions = {};
+		gData.nodes.forEach((node) => {
+			// @ts-ignore
+			positions[node.id] = { x: node.x, y: node.y, z: node.z };
+		});
+		// @ts-ignore
+		set(positionsRef, positions);
+	}
+
+	// @ts-ignore
+	// @ts-ignore
+	// @ts-ignore
+	async function loadNodePositions() {
+		const positionsRef = ref(db, 'nodePositions');
+		const snapshot = await get(positionsRef);
+		savedPositions = snapshot.val() || {};
+	}
+
+	// @ts-ignore
+	function resetInactivityTimer() {
+		// @ts-ignore
+		clearTimeout(inactivityTimer);
+		inactivityTimer = setTimeout(saveNodePositions, inactivityDelay);
 	}
 </script>
 
