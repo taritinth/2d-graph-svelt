@@ -47,6 +47,9 @@
 	let inactivityTimer;
 	const inactivityDelay = 3000; // 3 seconds
 
+	let linkWidth = 0.5; // Initial link width
+	let linkOpacity = 0.4; // Initial link opacity
+
 	onMount(async () => {
 		// Dynamically import force-graph in onMount
 		const { default: ForceGraph } = await import('force-graph');
@@ -132,8 +135,8 @@
 			.nodeAutoColorBy('id')
 			.nodeLabel('id')
 			.backgroundColor('#000011')
-			.linkWidth(0.5)
-			.linkColor(() => 'rgba(255, 255, 255, 0.4)')
+			.linkWidth(linkWidth)
+			.linkColor(() => `rgba(255, 255, 255, ${linkOpacity})`)
 			// @ts-ignore
 			.nodeCanvasObject((node, ctx) => {
 				// @ts-ignore
@@ -246,12 +249,49 @@
 		clearTimeout(inactivityTimer);
 		inactivityTimer = setTimeout(saveNodePositions, inactivityDelay);
 	}
+
+	function updateGraphAttributes() {
+		if (graphInstance) {
+			graphInstance
+				.linkWidth(linkWidth)
+				.linkColor(() => `rgba(255, 255, 255, ${linkOpacity})`)
+				.refresh(); // This will redraw the links with the new attributes
+		}
+	}
 </script>
 
 <!-- Test commit -->
 
 <div id="graph-container">
 	<div id="force-graph" />
+	<div id="input">
+		<div>
+			<label for="linkWidth">Link Width:</label>
+			<input
+				type="range"
+				id="linkWidth"
+				bind:value={linkWidth}
+				min="0.1"
+				max="5"
+				step="0.1"
+				on:input={updateGraphAttributes}
+			/>
+			{linkWidth}
+		</div>
+		<div>
+			<label for="linkOpacity">Link Opacity:</label>
+			<input
+				type="range"
+				id="linkOpacity"
+				bind:value={linkOpacity}
+				min="0"
+				max="1"
+				step="0.1"
+				on:input={updateGraphAttributes}
+			/>
+			{linkOpacity}
+		</div>
+	</div>
 </div>
 
 <style>
@@ -259,5 +299,10 @@
 		position: relative;
 		width: 100%;
 		height: 100%;
+	}
+	#input {
+		position: fixed;
+		bottom: 40px;
+		color: #fff;
 	}
 </style>
