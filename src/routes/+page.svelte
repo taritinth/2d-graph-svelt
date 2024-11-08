@@ -47,7 +47,7 @@
 	let inactivityTimer;
 	const inactivityDelay = 3000; // 3 seconds
 
-	let linkWidth = 0.8; // Initial link width
+	let linkWidth = 2; // Initial link width
 	let linkOpacity = 0.6; // Initial link opacity
 
 	onMount(async () => {
