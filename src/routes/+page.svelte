@@ -47,7 +47,7 @@
 	let inactivityTimer;
 	const inactivityDelay = 3000; // 3 seconds
 
-	let linkWidth = 2; // Initial link width
+	let linkWidth = 1; // Initial link width
 	let linkOpacity = 0.6; // Initial link opacity
 
 	onMount(async () => {
@@ -232,6 +232,7 @@
 		});
 		// @ts-ignore
 		set(positionsRef, positions);
+		console.log('Node positions saved');
 	}
 
 	// @ts-ignore
