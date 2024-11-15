@@ -73,6 +73,8 @@
 					// @ts-ignore
 					// @ts-ignore
 					nodes: Object.entries(users).map(([key, user]) => {
+						if (!user.displayName) return;
+
 						const userAvatar = new Image();
 						userAvatar.src = user.avatarUrl;
 						return {
