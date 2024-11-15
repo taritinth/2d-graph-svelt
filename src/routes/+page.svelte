@@ -72,23 +72,23 @@
 				gData = {
 					// @ts-ignore
 					// @ts-ignore
-					nodes: Object.entries(users).map(([key, user]) => {
-						if (!user.displayName) return;
-
-						const userAvatar = new Image();
-						userAvatar.src = user.avatarUrl;
-						return {
-							id: key,
-							// @ts-ignore
-							x: savedPositions[key]?.x || Math.random() * boundary * 2 - boundary, // Use saved or random position
-							// @ts-ignore
-							y: savedPositions[key]?.y || Math.random() * boundary * 2 - boundary,
-							// @ts-ignore
-							z: savedPositions[key]?.z || Math.random() * zBoundary * 2 - zBoundary,
-							size: minNodeSize,
-							img: userAvatar
-						};
-					}),
+					nodes: Object.entries(users)
+						.filter(([key, user]) => user.displayName && user.avatarUrl)
+						.map(([key, user]) => {
+							const userAvatar = new Image();
+							userAvatar.src = user.avatarUrl;
+							return {
+								id: key,
+								// @ts-ignore
+								x: savedPositions[key]?.x || Math.random() * boundary * 2 - boundary, // Use saved or random position
+								// @ts-ignore
+								y: savedPositions[key]?.y || Math.random() * boundary * 2 - boundary,
+								// @ts-ignore
+								z: savedPositions[key]?.z || Math.random() * zBoundary * 2 - zBoundary,
+								size: minNodeSize,
+								img: userAvatar
+							};
+						}),
 					links: []
 				};
 
